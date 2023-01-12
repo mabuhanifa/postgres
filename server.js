@@ -5,7 +5,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // get all todos
 app.get("/book", async (req, res) => {
@@ -66,17 +66,17 @@ app.post("/book", async (req, res) => {
 });
 
 // update a book by id
-app.put("/books/:id", async (req, res) => {
+app.put("/book/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, info } = req.body;
+    const { name, price, info, img } = req.body;
     const updatedBook = await pool.query(
-      "UPDATE book SET name=$1, price=$2 info=$3 WHERE id=$4 RETURNING *",
-      [name, price, info, id]
+      "UPDATE bookdb SET name=$1, price=$2, info=$3, img=$4 WHERE id=$5 RETURNING *",
+      [name, price, info, img, id]
     );
 
     res.status(201).json({
-      message: `book was updated successfully ${id} ,${name}, ${info}`,
+      message: `book was updated successfully ${id} ,${name}`,
       data: updatedBook.rows,
     });
   } catch (error) {
